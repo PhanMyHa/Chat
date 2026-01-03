@@ -1,4 +1,8 @@
+import Logout from "@/components/auth/LogOut"
+
 const Home = () => {
-  return <div className=" w-800 bg-amber-600 text-3xl font-bold underline">Hello world!</div>;
+  return <>
+  <Logout/>
+  </>
 }
 export default Home
