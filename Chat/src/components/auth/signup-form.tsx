@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "../ui/label";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useNavigate } from "react-router";
+import { useState } from "react";
 import img from "../../assets/signup.jpg";
 import logo from "../../assets/logo.jpg";
 
@@ -27,6 +28,10 @@ export function SignupForm({
 }: React.ComponentProps<"div">) {
   const { signUp } = useAuthStore();
   const navigate = useNavigate();
+  const [selectedRole, setSelectedRole] = useState<"customer" | "admin">(
+    "customer"
+  );
+
   const {
     register,
     handleSubmit,
@@ -39,7 +44,7 @@ export function SignupForm({
     const { firstname, lastname, username, email, password } = data;
 
     // gọi backend để signup
-    await signUp(username, password, email, firstname, lastname);
+    await signUp(username, password, email, firstname, lastname, selectedRole);
 
     navigate("/signin");
   };
@@ -60,6 +65,31 @@ export function SignupForm({
                 <p className="text-muted-foreground text-balance">
                   Chào mừng bạn! Hãy đăng ký để bắt đầu!
                 </p>
+              </div>
+
+              {/* Chọn Role */}
+              <div className="flex flex-col gap-3">
+                <Label className="block text-sm">Loại tài khoản</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    type="button"
+                    variant={
+                      selectedRole === "customer" ? "default" : "outline"
+                    }
+                    onClick={() => setSelectedRole("customer")}
+                    className="w-full"
+                  >
+                    👤 Người dùng
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={selectedRole === "admin" ? "default" : "outline"}
+                    onClick={() => setSelectedRole("admin")}
+                    className="w-full"
+                  >
+                    👑 Quản trị viên
+                  </Button>
+                </div>
               </div>
 
               {/* họ & tên */}

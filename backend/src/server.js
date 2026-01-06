@@ -4,6 +4,10 @@ import { connectDB } from "./libs/db.js";
 import authRoute from "./routes/authRoute.js";
 import cookieParser from "cookie-parser";
 import userRoute from "./routes/userRoute.js";
+import productRoute from "./routes/productRoute.js";
+import categoryRoute from "./routes/categoryRoute.js";
+import cartRoute from "./routes/cartRoute.js";
+import orderRoute from "./routes/orderRoute.js";
 import { protectedRoute } from "./middlewares/authMiddleware.js";
 import cors from "cors";
 dotenv.config();
@@ -15,12 +19,17 @@ const PORT = process.env.PORT || 5001;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
-//public route
+
+//public routes
 app.use("/api/auth", authRoute);
+app.use("/api/products", productRoute);
+app.use("/api/categories", categoryRoute);
 
-//private route
+//private routes
+app.use("/api/users", protectedRoute, userRoute);
+app.use("/api/cart", cartRoute);
+app.use("/api/orders", orderRoute);
 
-app.use("/api/users",protectedRoute, userRoute);
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`server chay tren cong ${PORT} `);

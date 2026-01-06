@@ -6,14 +6,15 @@ export const authService = {
     password: string,
     email: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    role: "customer" | "admin" = "customer"
   ) => {
     const res = await api.post(
       "/auth/signup",
-      { username, password, email, firstName, lastName },
+      { username, password, email, firstName, lastName, role },
       { withCredentials: true }
     );
-
+ 
     return res.data;
   },
 
@@ -27,7 +28,8 @@ export const authService = {
   },
 
   signOut: async () => {
-    return api.post("/auth/signout", { withCredentials: true });
+    const res = await api.post("/auth/signout", {}, { withCredentials: true });
+    return res.data;
   },
 
   fetchMe: async () => {

@@ -6,6 +6,8 @@ export interface User {
   avatarUrl?: string;
   bio?: string;
   phone?: string;
+  role: "customer" | "admin";
+  isActive: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

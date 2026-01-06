@@ -7,6 +7,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   accessToken: null,
   user: null,
   loading: false,
+ 
 
   setAccessToken: (accessToken) => {
     set({ accessToken });
@@ -15,12 +16,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ accessToken: null, user: null, loading: false });
   },
 
-  signUp: async (username, password, email, firstName, lastName) => {
+  signUp: async (username, password, email, firstName, lastName, role) => {
     try {
       set({ loading: true });
 
       //  gọi api
-      await authService.signUp(username, password, email, firstName, lastName);
+      await authService.signUp(username, password, email, firstName, lastName, role);
 
       toast.success("Đăng ký thành công! Bạn sẽ được chuyển sang trang đăng nhập.");
     } catch (error) {
@@ -35,15 +36,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       set({ loading: true });
 
-      const { accessToken } = await authService.signIn(username, password);
+      const { accessToken, user } = await authService.signIn(username, password);
       get().setAccessToken(accessToken);
+      set({ user });
 
-      await get().fetchMe();
-
-      toast.success("Chào mừng bạn quay lại với Moji 🎉");
+      toast.success(`Chào mừng ${user.displayName} 🎉`);
+      
+      return user;
     } catch (error) {
       console.error(error);
       toast.error("Đăng nhập không thành công!");
+      throw error;
     } finally {
       set({ loading: false });
     }
@@ -51,12 +54,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   signOut: async () => {
     try {
-      get().clearState();
       await authService.signOut();
-      toast.success("Logout thành công!");
+      get().clearState();
+      toast.success("Đăng xuất thành công!");
     } catch (error) {
       console.error(error);
-      toast.error("Lỗi xảy ra khi logout. Hãy thử lại!");
+      // Vẫn clear state nếu có lỗi
+      get().clearState();
+      toast.error("Lỗi khi đăng xuất");
     }
   },
 

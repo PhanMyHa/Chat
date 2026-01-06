@@ -34,8 +34,18 @@ export function SigninForm({
 
   const onSubmit = async (data: SignInFormValues) => {
     const { username, password } = data;
-    await signIn(username, password);
-    navigate("/");
+    try {
+      const user = await signIn(username, password);
+
+      // Điều hướng dựa trên role
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      // Error đã được xử lý trong store
+    }
   };
 
   return (

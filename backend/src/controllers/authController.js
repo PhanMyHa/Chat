@@ -10,7 +10,7 @@ const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000; // 14 ngày
 
 export const signUp = async (req, res) => {
   try {
-    const { username, password, email, firstName, lastName } = req.body;
+    const { username, password, email, firstName, lastName, role } = req.body;
 
     if (!username || !password || !email || !firstName || !lastName) {
       return res.status(400).json({
@@ -18,6 +18,9 @@ export const signUp = async (req, res) => {
           "Không thể thiếu username, password, email, firstName, và lastName",
       });
     }
+
+    // Validate role
+    const userRole = role === "admin" ? "admin" : "customer";
 
     // kiểm tra username tồn tại chưa
     const duplicate = await User.findOne({ username });
@@ -30,15 +33,27 @@ export const signUp = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10); // salt = 10
 
     // tạo user mới
-    await User.create({
+    const newUser = await User.create({
       username,
       hashedPassword,
       email,
       displayName: `${firstName} ${lastName}`,
+      role: userRole,
+      isActive: true,
     });
 
     // return
-    return res.sendStatus(204);
+    return res.status(201).json({
+      message: "Đăng ký thành công",
+      user: {
+        _id: newUser._id,
+        username: newUser.username,
+        email: newUser.email,
+        displayName: newUser.displayName,
+        role: newUser.role,
+        isActive: newUser.isActive,
+      },
+    });
   } catch (error) {
     console.error("Lỗi khi gọi signUp", error);
     return res.status(500).json({ message: "Lỗi hệ thống" });
@@ -98,10 +113,22 @@ export const signIn = async (req, res) => {
       maxAge: REFRESH_TOKEN_TTL,
     });
 
-    // trả access token về trong res
-    return res
-      .status(200)
-      .json({ message: `User ${user.displayName} đã logged in!`, accessToken });
+    // trả access token và user info về trong res
+    return res.status(200).json({
+      message: `User ${user.displayName} đã logged in!`,
+      accessToken,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        displayName: user.displayName,
+        role: user.role,
+        isActive: user.isActive,
+        avatarId: user.avatarId,
+        bio: user.bio,
+        phone: user.phone,
+      },
+    });
   } catch (error) {
     console.error("Lỗi khi gọi signIn", error);
     return res.status(500).json({ message: "Lỗi hệ thống" });
