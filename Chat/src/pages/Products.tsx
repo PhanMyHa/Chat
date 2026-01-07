@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { HomeHeader } from "@/components/home/HomeHeader";
 
 export const Products = () => {
   const {
@@ -75,8 +76,9 @@ export const Products = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-zinc-950 font-sans selection:bg-black selection:text-white pt-24 pb-20">
+    <div className="min-h-screen bg-white text-zinc-950 font-sans selection:bg-black selection:text-white  pb-20">
       {/* Header Section */}
+      <HomeHeader/>
       <div className="container mx-auto px-6 mb-12">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pb-6 border-b border-zinc-100">
           <div>
@@ -121,7 +123,7 @@ export const Products = () => {
       </div>
 
       {/* Controls Section (Search & Filter) */}
-      <div className="container mx-auto px-6 mb-12 sticky top-20 z-30 bg-white/90 backdrop-blur-sm py-4 -mx-6 md:mx-auto md:px-6">
+      <div className="container mx-auto px-6 mb-12 sticky top-15 z-30 bg-white/90 backdrop-blur-sm py-4 md:mx-auto md:px-6">
         <div className="flex flex-col lg:flex-row gap-6 justify-between items-center">
           {/* Categories - Horizontal Scroll */}
           <div className="w-full lg:w-2/3 overflow-x-auto pb-2 scrollbar-hide">
