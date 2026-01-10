@@ -49,7 +49,7 @@ export const HomeHeader = () => {
             </div>
             <div className="flex flex-col">
               <span className="text-lg font-bold tracking-tight text-zinc-900 leading-none">
-                ShopQuanAo
+                Chat-Shop
               </span>
               <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-widest">
                 Fashion Store

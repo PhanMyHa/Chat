@@ -3,19 +3,18 @@ import { useProductStore } from "@/stores/useProductStore";
 import { useCartStore } from "@/stores/useCartStore";
 import { ProductCard } from "@/components/products/ProductCard";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { HomeHeader } from "@/components/home/HomeHeader"; 
+import { HomeFooter } from "@/components/home/HomeFooter"; 
 import {
   Search,
-  ShoppingBag,
-  ArrowLeft,
-  ArrowRight,
   ChevronLeft,
   ChevronRight,
-  SlidersHorizontal,
+  Sparkles,
+  LayoutGrid,
+  ListFilter,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { HomeHeader } from "@/components/home/HomeHeader";
 
 export const Products = () => {
   const {
@@ -26,19 +25,19 @@ export const Products = () => {
     fetchProducts,
     fetchCategories,
   } = useProductStore();
-  const { addToCart, getCartItemsCount } = useCartStore();
+  const { addToCart } = useCartStore();
 
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
-  // Logic giữ nguyên
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
 
   useEffect(() => {
-    const filters: any = { page: currentPage, limit: 12 };
+    const filters: any = { page: currentPage, limit: 12 }; // Limit 15 để lưới 5 cột đẹp hơn (3x5 hoặc 5x3)
     if (selectedCategory) filters.category = selectedCategory;
     if (searchQuery) filters.search = searchQuery;
     fetchProducts(filters);
@@ -61,203 +60,234 @@ export const Products = () => {
     }
   };
 
-  // Animation Variants
+  // --- Animation Variants ---
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.05 },
+      transition: { staggerChildren: 0.05, delayChildren: 0.1 },
     },
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+    hidden: { opacity: 0, scale: 0.9, y: 20 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: { type: "spring" as const, stiffness: 100, damping: 15 },
+    },
   };
 
   return (
-    <div className="min-h-screen bg-white text-zinc-950 font-sans selection:bg-black selection:text-white  pb-20">
-      {/* Header Section */}
-      <HomeHeader/>
-      <div className="container mx-auto px-6 mb-12">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pb-6 border-b border-zinc-100">
-          <div>
+    <div className="min-h-screen bg-[#FAFAF9] text-zinc-900 font-sans selection:bg-rose-200 selection:text-rose-900">
+      <HomeHeader />
+
+      <div className="fixed inset-0 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[20px_20px] opacity-60 pointer-events-none z-0" />
+      <div className="fixed top-20 right-0 w-125 h-125 bg-rose-100/40 rounded-full blur-[100px] pointer-events-none z-0" />
+
+      <main className="relative z-10 pt-10 pb-20">
+        <div className="container mx-auto px-6 mb-10">
+          <div className="flex flex-col items-center text-center space-y-4">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-2 mb-2 text-zinc-500 text-sm font-medium uppercase tracking-wider"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-zinc-200 shadow-sm text-xs font-medium text-zinc-500"
             >
-              <Link to="/" className="hover:text-black transition-colors">
+              <Link to="/" className="hover:text-rose-500 transition-colors">
                 Home
               </Link>
-              <span>/</span>
-              <span className="text-black">Collection</span>
+              <span className="text-zinc-300">/</span>
+              <span className="text-zinc-900">Collection</span>
             </motion.div>
+
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.1 }}
-              className="text-4xl md:text-6xl font-black tracking-tighter uppercase"
+              className="text-4xl md:text-6xl font-black tracking-tighter text-zinc-900"
             >
-              All Products
-            </motion.h1>
-          </div>
-
-          <Link to="/cart">
-            <Button
-              variant="outline"
-              className="relative h-12 px-6 border-zinc-200 hover:border-black hover:bg-black hover:text-white transition-all duration-300 rounded-none group"
-            >
-              <ShoppingBag className="mr-2 w-4 h-4" />
-              <span className="uppercase tracking-wide font-bold text-xs">
-                Giỏ hàng của bạn
+              Explore{" "}
+              <span className="font-serif italic font-light text-rose-500">
+                Collection
               </span>
-              {getCartItemsCount() > 0 && (
-                <span className="absolute -top-2 -right-2 bg-black text-white group-hover:bg-white group-hover:text-black w-6 h-6 flex items-center justify-center text-[10px] font-bold rounded-full transition-colors border-2 border-white">
-                  {getCartItemsCount()}
-                </span>
-              )}
-            </Button>
-          </Link>
-        </div>
-      </div>
+            </motion.h1>
 
-      {/* Controls Section (Search & Filter) */}
-      <div className="container mx-auto px-6 mb-12 sticky top-15 z-30 bg-white/90 backdrop-blur-sm py-4 md:mx-auto md:px-6">
-        <div className="flex flex-col lg:flex-row gap-6 justify-between items-center">
-          {/* Categories - Horizontal Scroll */}
-          <div className="w-full lg:w-2/3 overflow-x-auto pb-2 scrollbar-hide">
-            <div className="flex gap-2 min-w-max">
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setSelectedCategory("");
-                  setCurrentPage(1);
-                }}
-                className={`rounded-full px-6 transition-all duration-300 border ${
-                  selectedCategory === ""
-                    ? "bg-black text-white border-black"
-                    : "bg-transparent text-zinc-500 border-zinc-200 hover:border-black hover:text-black"
-                }`}
-              >
-                Tất cả
-              </Button>
-              {categories.map((category) => (
-                <Button
-                  key={category._id}
-                  variant="ghost"
-                  onClick={() => {
-                    setSelectedCategory(category._id);
-                    setCurrentPage(1);
-                  }}
-                  className={`rounded-full px-6 transition-all duration-300 border ${
-                    selectedCategory === category._id
-                      ? "bg-black text-white border-black"
-                      : "bg-transparent text-zinc-500 border-zinc-200 hover:border-black hover:text-black"
-                  }`}
-                >
-                  {category.name}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          {/* Search Bar - Minimalist Underline */}
-          <form
-            onSubmit={handleSearch}
-            className="w-full lg:w-1/3 relative group"
-          >
-            <Search className="absolute left-0 top-1/2 transform -translate-y-1/2 text-zinc-400 group-focus-within:text-black transition-colors w-5 h-5" />
-            <input
-              type="text"
-              placeholder="TÌM KIẾM SẢN PHẨM..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-4 py-3 bg-transparent border-b border-zinc-200 focus:border-black outline-none transition-colors placeholder:text-zinc-300 text-sm font-medium uppercase tracking-wide"
-            />
-            <Button
-              type="submit"
-              variant="ghost"
-              size="sm"
-              className="absolute right-0 top-1/2 -translate-y-1/2 opacity-0 group-focus-within:opacity-100 transition-opacity"
-            >
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </form>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-6">
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-24 space-y-4">
-            <div className="w-8 h-8 border-2 border-zinc-200 border-t-black rounded-full animate-spin"></div>
-            <p className="text-zinc-400 text-sm animate-pulse">
-              LOADING COLLECTION...
+            <p className="max-w-md text-zinc-500 text-sm md:text-base">
+              Khám phá những thiết kế mới nhất, mang đậm phong cách cá nhân và
+              sự tinh tế trong từng đường kim mũi chỉ.
             </p>
           </div>
-        ) : (
-          <AnimatePresence mode="wait">
-            {/* Key changes to force re-render animation when page/category changes */}
-            <motion.div
-              key={currentPage + selectedCategory}
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12 mb-16"
-            >
-              {products.length > 0 ? (
-                products.map((product) => (
-                  <motion.div key={product._id} variants={cardVariants}>
-                    <ProductCard
-                      product={product}
-                      onAddToCart={() => handleAddToCart(product._id)}
-                    />
-                  </motion.div>
-                ))
-              ) : (
-                <div className="col-span-full py-12 text-center border border-dashed border-zinc-200 rounded-sm">
-                  <p className="text-zinc-500">Không tìm thấy sản phẩm nào.</p>
-                </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        )}
+        </div>
 
-        {/* Pagination - Minimalist */}
-        {!isLoading && pagination && pagination.pages > 1 && (
-          <div className="flex justify-center items-center gap-4 pt-8 border-t border-zinc-100">
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full w-10 h-10 border-zinc-200 hover:border-black hover:bg-black hover:text-white transition-all disabled:opacity-30"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </Button>
-
-            <div className="flex items-center gap-2 px-4">
-              <span className="font-bold text-lg">{currentPage}</span>
-              <span className="text-zinc-300 text-lg">/</span>
-              <span className="text-zinc-500 text-lg">{pagination.pages}</span>
+        <div className="sticky top-20 z-40 container mx-auto px-6 mb-10">
+          <div className="bg-white/80 backdrop-blur-xl border border-white/50 shadow-lg shadow-zinc-200/50 rounded-2xl p-2 md:p-3 flex flex-col md:flex-row gap-4 justify-between items-center transition-all">
+            <div className="w-full md:w-auto overflow-x-auto scrollbar-hide">
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedCategory("");
+                    setCurrentPage(1);
+                  }}
+                  className={`rounded-xl px-4 font-medium transition-all ${
+                    selectedCategory === ""
+                      ? "bg-zinc-900 text-white shadow-md hover:bg-zinc-800 hover:text-white"
+                      : "bg-transparent text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900"
+                  }`}
+                >
+                  <LayoutGrid className="w-4 h-4 mr-2" />
+                  Tất cả
+                </Button>
+                <div className="w-px h-6 bg-zinc-200 mx-1" />
+                {categories.map((category) => (
+                  <Button
+                    key={category._id}
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedCategory(category._id);
+                      setCurrentPage(1);
+                    }}
+                    className={`rounded-xl px-4 transition-all whitespace-nowrap ${
+                      selectedCategory === category._id
+                        ? "bg-rose-500 text-white shadow-md shadow-rose-200 hover:bg-rose-600 hover:text-white"
+                        : "bg-transparent text-zinc-500 hover:bg-rose-50 hover:text-rose-600"
+                    }`}
+                  >
+                    {category.name}
+                  </Button>
+                ))}
+              </div>
             </div>
 
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full w-10 h-10 border-zinc-200 hover:border-black hover:bg-black hover:text-white transition-all disabled:opacity-30"
-              onClick={() =>
-                setCurrentPage((p) => Math.min(pagination.pages, p + 1))
-              }
-              disabled={currentPage === pagination.pages}
+            <form
+              onSubmit={handleSearch}
+              className="relative w-full md:w-75 group"
             >
-              <ChevronRight className="w-4 h-4" />
-            </Button>
+              <div
+                className={`flex items-center px-4 py-2.5 rounded-xl border transition-all duration-300 ${
+                  isSearchFocused
+                    ? "bg-white border-rose-500 ring-2 ring-rose-100 shadow-sm"
+                    : "bg-zinc-50 border-zinc-200"
+                }`}
+              >
+                <Search
+                  className={`w-4 h-4 mr-3 transition-colors ${
+                    isSearchFocused ? "text-rose-500" : "text-zinc-400"
+                  }`}
+                />
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setIsSearchFocused(false)}
+                  className="bg-transparent border-none outline-none text-sm w-full placeholder:text-zinc-400 text-zinc-800"
+                />
+              </div>
+            </form>
           </div>
-        )}
-      </div>
+        </div>
+
+        <div className="container mx-auto px-6 min-h-100">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-20 space-y-4">
+              <div className="relative">
+                <div className="w-12 h-12 border-4 border-rose-100 border-t-rose-500 rounded-full animate-spin" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-rose-500 animate-pulse" />
+                </div>
+              </div>
+              <p className="text-zinc-400 text-xs font-medium tracking-widest uppercase animate-pulse">
+                Đang tải sản phẩm...
+              </p>
+            </div>
+          ) : (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentPage + selectedCategory + searchQuery} 
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-12"
+              >
+                {products.length > 0 ? (
+                  products.map((product) => (
+                    <motion.div key={product._id} variants={cardVariants}>
+                      <ProductCard
+                        product={product}
+                        onAddToCart={() => handleAddToCart(product._id)}
+                      />
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="col-span-full py-20 flex flex-col items-center text-center">
+                    <div className="w-16 h-16 bg-zinc-100 rounded-full flex items-center justify-center mb-4 text-zinc-400">
+                      <ListFilter className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-lg font-bold text-zinc-900">
+                      Không tìm thấy sản phẩm
+                    </h3>
+                    <p className="text-zinc-500 mt-2">
+                      Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm nhé.
+                    </p>
+                    <Button
+                      variant="link"
+                      onClick={() => {
+                        setSelectedCategory("");
+                        setSearchQuery("");
+                      }}
+                      className="mt-4 text-rose-500 hover:text-rose-600"
+                    >
+                      Xóa bộ lọc
+                    </Button>
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          )}
+
+          {!isLoading && pagination && pagination.pages > 1 && (
+            <div className="mt-20 flex justify-center">
+              <div className="bg-white border border-zinc-200 shadow-sm rounded-full p-1.5 flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full w-9 h-9 hover:bg-zinc-100 text-zinc-600 disabled:opacity-30"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+
+                <div className="px-4 text-sm font-medium">
+                  <span className="text-zinc-900">{currentPage}</span>
+                  <span className="text-zinc-300 mx-2">/</span>
+                  <span className="text-zinc-500">{pagination.pages}</span>
+                </div>
+
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full w-9 h-9 hover:bg-zinc-100 text-zinc-600 disabled:opacity-30"
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(pagination.pages, p + 1))
+                  }
+                  disabled={currentPage === pagination.pages}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+
+      <HomeFooter />
     </div>
   );
 };
