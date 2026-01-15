@@ -1,5 +1,4 @@
-// src/pages/AdminDashboard.tsx
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useProductStore } from "@/stores/useProductStore";
 import { orderService } from "@/services/orderService";
 import { userService } from "@/services/userService";
@@ -11,11 +10,12 @@ import { CategoriesTab } from "@/components/admin/CategoriesTab";
 import { OrdersTab } from "@/components/admin/OrdersTab";
 import { CustomersTab } from "@/components/admin/CustomersTab";
 
-export type TabType = "products" | "categories" | "orders" | "customers";
+type TabType = "products" | "categories" | "orders" | "customers";
 
 export const AdminDashboard = () => {
   const { products, categories, fetchProducts, fetchCategories } =
     useProductStore();
+
   const [activeTab, setActiveTab] = useState<TabType>("products");
 
   // Stats state
@@ -63,16 +63,12 @@ export const AdminDashboard = () => {
 
         <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
 
-        <div className="mt-6">
-          {activeTab === "products" && (
-            <ProductsTab refreshStats={fetchStats} />
-          )}
-          {activeTab === "categories" && (
-            <CategoriesTab refreshStats={fetchStats} />
-          )}
-          {activeTab === "orders" && <OrdersTab refreshStats={fetchStats} />}
-          {activeTab === "customers" && <CustomersTab />}
-        </div>
+        {activeTab === "products" && <ProductsTab refreshStats={fetchStats} />}
+        {activeTab === "categories" && (
+          <CategoriesTab refreshStats={fetchStats} />
+        )}
+        {activeTab === "orders" && <OrdersTab refreshStats={fetchStats} />}
+        {activeTab === "customers" && <CustomersTab />}
       </div>
     </div>
   );

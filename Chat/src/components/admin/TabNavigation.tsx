@@ -31,6 +31,7 @@ export const TabNavigation = ({
           >
             {tab.label}
           </button>
+          
         ))}
       </div>
     </div>

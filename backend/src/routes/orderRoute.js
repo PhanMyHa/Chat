@@ -6,6 +6,9 @@ import {
   cancelOrder,
   getAllOrders,
   updateOrderStatus,
+  createOrderWithVNPay,
+  vnpayReturn,
+  vnpayIPN,
 } from "../controllers/orderController.js";
 import { verifyToken } from "../middlewares/authMiddleware.js";
 import {
@@ -15,8 +18,12 @@ import {
 
 const router = Router();
 
+router.get("/vnpay/return", vnpayReturn);
+router.get("/vnpay/ipn", vnpayIPN);
+
 // Customer routes
 router.post("/", verifyToken, requireCustomer, createOrder);
+router.post("/vnpay", verifyToken, requireCustomer, createOrderWithVNPay);
 router.get("/my-orders", verifyToken, requireCustomer, getUserOrders);
 router.get("/:id", verifyToken, getOrderById);
 router.put("/:id/cancel", verifyToken, requireCustomer, cancelOrder);

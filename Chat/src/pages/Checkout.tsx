@@ -5,7 +5,7 @@ import { orderService } from "@/services/orderService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea"; 
+import { Textarea } from "@/components/ui/textarea";
 import type { CreateOrderData, PaymentMethod } from "@/types/order";
 import { toast } from "sonner";
 import { HomeHeader } from "@/components/home/HomeHeader";
@@ -56,12 +56,25 @@ export const Checkout = () => {
         note: formData.note,
       };
 
-      const order = await orderService.createOrder(orderData);
-      await clearCart();
-      toast.success("Đặt hàng thành công!", {
-        description: "Cảm ơn bạn đã mua sắm tại ShopQuanAo.",
-      });
-      navigate(`/orders/${order._id}`);
+      // Nếu chọn VNPay, sử dụng API riêng
+      if (formData.paymentMethod === "vnpay") {
+        const { order, paymentUrl } = await orderService.createOrderWithVNPay(
+          orderData
+        );
+
+        toast.success("Đang chuyển đến trang thanh toán VNPay...");
+
+        // Chuyển hướng đến VNPay
+        window.location.href = paymentUrl;
+      } else {
+        // Thanh toán COD hoặc phương thức khác
+        const order = await orderService.createOrder(orderData);
+        await clearCart();
+        toast.success("Đặt hàng thành công!", {
+          description: "Cảm ơn bạn đã mua sắm tại ShopQuanAo.",
+        });
+        navigate(`/orders/${order._id}`);
+      }
     } catch (error: any) {
       toast.error(
         error.response?.data?.message || "Đặt hàng thất bại. Vui lòng thử lại."
@@ -281,7 +294,7 @@ export const Checkout = () => {
                       placeholder="Ví dụ: Giao hàng giờ hành chính..."
                       className="min-h-[100px] rounded-xl bg-zinc-50 border-zinc-200 focus-visible:ring-rose-500 focus-visible:border-rose-500 transition-all resize-none"
                       value={formData.note}
-                      onChange={( e: any) =>
+                      onChange={(e: any) =>
                         setFormData({ ...formData, note: e.target.value })
                       }
                     />

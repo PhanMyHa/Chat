@@ -1,4 +1,4 @@
-// src/pages/AdminDashboard.tsx OR src/components/admin/AdminDashboard.tsx
+
 import { useEffect, useState } from "react";
 import { useProductStore } from "@/stores/useProductStore";
 import { orderService } from "@/services/orderService";
@@ -73,6 +73,7 @@ export const AdminDashboard = () => {
           {activeTab === "orders" && <OrdersTab refreshStats={fetchStats} />}
           {activeTab === "customers" && <CustomersTab />}
         </div>
+        
       </div>
     </div>
   );

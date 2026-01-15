@@ -15,6 +15,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+
 //middlewares
 app.use(express.json());
 app.use(cookieParser());
@@ -24,6 +25,7 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use("/api/auth", authRoute);
 app.use("/api/products", productRoute);
 app.use("/api/categories", categoryRoute);
+
 
 //private routes
 app.use("/api/users", protectedRoute, userRoute);

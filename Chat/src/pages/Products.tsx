@@ -37,7 +37,7 @@ export const Products = () => {
   }, [fetchCategories]);
 
   useEffect(() => {
-    const filters: any = { page: currentPage, limit: 12 }; // Limit 15 để lưới 5 cột đẹp hơn (3x5 hoặc 5x3)
+    const filters: any = { page: currentPage, limit: 12 }; 
     if (selectedCategory) filters.category = selectedCategory;
     if (searchQuery) filters.search = searchQuery;
     fetchProducts(filters);

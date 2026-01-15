@@ -7,6 +7,7 @@ import { ProductDetail } from "./pages/ProductDetail";
 import { Cart } from "./pages/Cart";
 import { Checkout } from "./pages/Checkout";
 import { Orders } from "./pages/Orders";
+import { VNPayReturn } from "./pages/VNPayReturn";
 import { Toaster } from "sonner";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { AdminRoute } from "./components/auth/AdminRoute";
@@ -23,6 +24,9 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetail />} />
+
+          {/* VNPay Return - Public route để xử lý callback */}
+          <Route path="/payment/vnpay-return" element={<VNPayReturn />} />
 
           {/* private */}
           <Route element={<ProtectedRoute />}>

@@ -61,7 +61,7 @@ export function SignupForm({
                   <img src={logo} alt="logo" className=" w-15 h-15" />
                 </a>
 
-                <h1 className="text-2xl font-bold">Tạo tài khoản Moji</h1>
+                <h1 className="text-2xl font-bold">Tạo tài khoản </h1>
                 <p className="text-muted-foreground text-balance">
                   Chào mừng bạn! Hãy đăng ký để bắt đầu!
                 </p>
@@ -131,7 +131,7 @@ export function SignupForm({
                 <Input
                   type="text"
                   id="username"
-                  placeholder="moji"
+                  placeholder=""
                   {...register("username")}
                 />
                 {errors.username && (

@@ -49,6 +49,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
       });
       toast.error(error.response?.data?.message || "Lỗi khi thêm vào giỏ hàng");
     }
+    
   },
 
   updateCartItem: async (itemId: string, quantity: number) => {

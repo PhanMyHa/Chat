@@ -37,7 +37,7 @@ export const AdminHeader = () => {
     <header className="sticky top-0 z-50 w-full border-b border-gray-200/50 bg-white/80 backdrop-blur-md transition-all">
       <div className="container mx-auto px-6 h-16">
         <div className="flex h-full items-center justify-between">
-          {/* --- Left: Logo Section --- */}
+         
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-lg shadow-blue-600/20">
               <LayoutDashboard className="h-5 w-5" />
@@ -50,9 +50,7 @@ export const AdminHeader = () => {
             </h1>
           </div>
 
-          {/* --- Right: Actions & Profile --- */}
           <div className="flex items-center gap-2 sm:gap-4">
-            {/* Navigation Group */}
             <nav className="hidden md:flex items-center gap-1 bg-gray-100/50 p-1 rounded-full border border-gray-200/50">
               <Link to="/">
                 <Button
@@ -84,7 +82,6 @@ export const AdminHeader = () => {
 
             <div className="h-6 w-px bg-gray-200 hidden md:block" />
 
-            {/* User Profile Dropdown / Area */}
             <div className="flex items-center gap-3 pl-2">
               <div className="hidden sm:flex flex-col items-end">
                 <span className="text-sm font-semibold text-gray-700 leading-none">
