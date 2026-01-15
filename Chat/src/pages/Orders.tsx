@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { orderService } from "@/services/orderService";
 import { OrderItem } from "@/components/orders/OrderItem";
+import { HomeHeader } from "@/components/home/HomeHeader";
 import { Button } from "@/components/ui/button";
 import type { OrderStatus } from "@/types/order";
 import { toast } from "sonner";
@@ -55,6 +56,7 @@ export const Orders = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <HomeHeader/>
       <h1 className="text-3xl font-bold mb-6">Đơn hàng của tôi</h1>
 
       {/* Status Filter */}
