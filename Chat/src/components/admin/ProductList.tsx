@@ -27,28 +27,28 @@ export const ProductList = ({
       {products.map((product) => (
         <Card
           key={product._id}
-          className="overflow-hidden hover:shadow-md transition-shadow"
+          className="h-90 overflow-hidden hover:shadow-md transition-shadow flex flex-col text-sm"
         >
-          <div className="relative aspect-video bg-gray-100">
+          <div className="relative h-35 bg-gray-100">
             <img
               src={product.images[0] || "/placeholder.jpg"}
               alt={product.name}
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="p-4">
-            <h3 className="font-bold mb-1 line-clamp-1" title={product.name}>
-              {product.name}
-            </h3>
-            <div className="text-sm text-gray-500 mb-2 line-clamp-2 min-h-10">
+
+          <div className="p-3 flex flex-col flex-1">
+            <h3 className="font-semibold mb-1 line-clamp-1">{product.name}</h3>
+
+            <div className="text-xs text-gray-500 mb-2 line-clamp-2 min-h-8">
               {product.description}
             </div>
 
-            <div className="font-semibold text-rose-600 mb-4">
+            <div className="font-semibold text-rose-600 mb-3">
               {(product.discountPrice || product.price).toLocaleString("vi-VN")}
               ₫
               {product.discountPrice && (
-                <span className="text-gray-400 text-sm line-through ml-2">
+                <span className="text-gray-400 text-xs line-through ml-2">
                   {product.price.toLocaleString("vi-VN")}₫
                 </span>
               )}
