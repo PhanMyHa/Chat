@@ -4,6 +4,7 @@ import { useProductStore } from "@/stores/useProductStore";
 import { useCartStore } from "@/stores/useCartStore";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { HomeHeader } from "@/components/home/HomeHeader";
 import { ArrowLeft, Minus, Plus, ShoppingCart } from "lucide-react";
 
 export const ProductDetail = () => {
@@ -64,6 +65,7 @@ export const ProductDetail = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <HomeHeader/>
       <Button
         variant="ghost"
         onClick={() => navigate("/products")}
