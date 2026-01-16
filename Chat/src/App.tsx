@@ -24,8 +24,6 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetail />} />
-
-          {/* VNPay Return - Public route để xử lý callback */}
           <Route path="/payment/vnpay-return" element={<VNPayReturn />} />
 
           {/* private */}
